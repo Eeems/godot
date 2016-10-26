@@ -15,6 +15,7 @@ SConscript('windows/SCsub');
 SConscript('gles2/SCsub');
 SConscript('gl_context/SCsub');
 SConscript('pnm/SCsub');
+SConscript('3ds/SCsub');
 
 if (env['openssl']!='no'):
 	env_drivers.Append(CPPFLAGS=['-DOPENSSL_ENABLED']);
