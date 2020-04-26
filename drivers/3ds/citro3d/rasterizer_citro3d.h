@@ -29,7 +29,7 @@
 #ifndef RASTERIZER_CITRO3D_H
 #define RASTERIZER_CITRO3D_H
 
-#include "servers/visual/rasterizer.h"
+#include "servers/rendering/rendering_server_raster.h"
 
 #include "image.h"
 #include "rid.h"

@@ -3,9 +3,10 @@
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
-/*                    http://www.godotengine.org                         */
+/*                      https://godotengine.org                          */
 /*************************************************************************/
-/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2007-2020 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2014-2020 Godot Engine contributors (cf. AUTHORS.md).   */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -26,6 +27,7 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
+
 #ifndef IOS_H
 #define IOS_H
 
@@ -33,16 +35,17 @@
 
 class iOS : public Object {
 
-	OBJ_TYPE(iOS, Object);
+	GDCLASS(iOS, Object);
 
 	static void _bind_methods();
 
 public:
+	static void alert(const char *p_alert, const char *p_title);
 
+	String get_model() const;
 	String get_rate_url(int p_app_id) const;
 
 	iOS();
-
 };
 
 #endif

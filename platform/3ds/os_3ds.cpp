@@ -26,8 +26,8 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
-#include "servers/visual/visual_server_raster.h"
-// #include "servers/visual/rasterizer_dummy.h"
+#include "servers/rendering/rendering_server_raster.h"
+#include "servers/rendering/rendering_server_wrap_mt.h"
 #include "drivers/3ds/citro3d/rasterizer_citro3d.h"
 #include "os_3ds.h"
 #include <stdio.h>
@@ -156,10 +156,10 @@ void OS_3DS::initialize(const VideoMode& p_desired,int p_video_driver,int p_audi
 	rasterizer = memnew( RasterizerCitro3d );
 // 	rasterizer = memnew( RasterizerDummy );
 	
-	visual_server = memnew( VisualServerRaster(rasterizer) );
+	visual_server = memnew( RenderingServerRaster(rasterizer) );
 	
 	if (get_render_thread_mode()!=RENDER_THREAD_UNSAFE) {
-		visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
+		visual_server =memnew(RenderingServerWrapMT(visual_server, get_render_thread_mode()==RENDER_SEPARATE_THREAD));
 	}
 	
 	AudioDriverManagerSW::get_driver(0)->set_singleton();

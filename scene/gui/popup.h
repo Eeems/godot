@@ -3,9 +3,10 @@
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
-/*                    http://www.godotengine.org                         */
+/*                      https://godotengine.org                          */
 /*************************************************************************/
-/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2007-2020 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2014-2020 Godot Engine contributors (cf. AUTHORS.md).   */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -26,66 +27,49 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
+
 #ifndef POPUP_H
 #define POPUP_H
 
-#include "scene/gui/control.h"
+#include "scene/main/window.h"
 
-/**
-	@author Juan Linietsky <reduzio@gmail.com>
-*/
-class Popup : public Control {
+class Popup : public Window {
 
-	OBJ_TYPE( Popup, Control );
+	GDCLASS(Popup, Window);
 
-	bool exclusive;
-	bool popped_up;
+	Window *parent_visible;
+
+	void _input_from_window(const Ref<InputEvent> &p_event);
+	void _parent_focused();
 
 protected:
+	void _close_pressed();
+	virtual Rect2i _popup_adjust_rect() const;
 
-	virtual void _post_popup() {}
-
-	void _input_event(InputEvent p_event);
 	void _notification(int p_what);
-	void _fix_size();
 	static void _bind_methods();
+
 public:
-
-	enum {
-		NOTIFICATION_POST_POPUP=80,
-		NOTIFICATION_POPUP_HIDE=81
-	};
-
-	void set_exclusive(bool p_exclusive);
-	bool is_exclusive() const;
-
-	void popup_centered_ratio(float p_screen_ratio=0.75);
-	void popup_centered(const Size2& p_size=Size2());
-	void popup_centered_minsize(const Size2& p_minsize=Size2());
 	void set_as_minsize();
-	virtual void popup();
-
-	virtual String get_configuration_warning() const;
-
 	Popup();
 	~Popup();
-
 };
 
 class PopupPanel : public Popup {
 
-	OBJ_TYPE(PopupPanel,Popup);
+	GDCLASS(PopupPanel, Popup);
 
+	Panel *panel;
 
 protected:
-
+	void _update_child_rects();
 	void _notification(int p_what);
-public:
 
+	virtual Size2 _get_contents_minimum_size() const;
+
+public:
 	void set_child_rect(Control *p_child);
 	PopupPanel();
-
 };
-
 
 #endif

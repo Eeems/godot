@@ -3,9 +3,10 @@
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
-/*                    http://www.godotengine.org                         */
+/*                      https://godotengine.org                          */
 /*************************************************************************/
-/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2007-2020 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2014-2020 Godot Engine contributors (cf. AUTHORS.md).   */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -26,11 +27,12 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
+
 #include "thread_dummy.h"
 
-#include "memory.h"
+#include "core/os/memory.h"
 
-Thread* ThreadDummy::create(ThreadCreateCallback p_callback,void * p_user,const Thread::Settings& p_settings) {
+Thread *ThreadDummy::create(ThreadCreateCallback p_callback, void *p_user, const Thread::Settings &p_settings) {
 	return memnew(ThreadDummy);
 };
 
@@ -38,22 +40,10 @@ void ThreadDummy::make_default() {
 	Thread::create_func = &ThreadDummy::create;
 };
 
-Mutex* MutexDummy::create(bool p_recursive) {
-	return memnew(MutexDummy);
+RWLock *RWLockDummy::create() {
+	return memnew(RWLockDummy);
 };
 
-void MutexDummy::make_default() {
-	Mutex::create_func = &MutexDummy::create;
+void RWLockDummy::make_default() {
+	RWLock::create_func = &RWLockDummy::create;
 };
-
-
-Semaphore* SemaphoreDummy::create() {
-	return memnew(SemaphoreDummy);
-};
-
-void SemaphoreDummy::make_default() {
-	Semaphore::create_func = &SemaphoreDummy::create;
-};
-
-
-

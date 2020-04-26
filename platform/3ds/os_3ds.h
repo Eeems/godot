@@ -30,8 +30,8 @@
 #define OS_3DS_H
 
 
-#include "os/os.h"
-#include "os/input.h"
+#include "3ds/os.h"
+#include "input.h"
 #include "servers/visual_server.h"
 #include "servers/visual/visual_server_wrap_mt.h"
 #include "servers/visual/rasterizer.h"

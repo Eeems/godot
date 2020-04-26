@@ -13,11 +13,11 @@ def get_name():
 
 def can_build():
 
-	if (not os.environ.has_key("DEVKITPRO")):
+	if ("DEVKITPRO" not in os.environ):
 		return False
-	if (not os.environ.has_key("DEVKITARM")):
+	if ("DEVKITARM" not in os.environ):
 		return False
-	if (not os.environ.has_key("CTRULIB")):
+	if ("CTRULIB" not in os.environ):
 		return False
 	if (os.name=="nt"):
 		return False
@@ -73,7 +73,6 @@ def build_shader_header(target, source, env):
 		f.write("static uint8_t shader_builtin_{}[] =\n{{{}}};".format(name, data_str))
 
 def configure(env):
-	
 	env.disabled_modules = ['enet']
 
 	env.Append( BUILDERS = { 'PICA' : env.Builder(generator = build_shader_gen, suffix = '.shbin', src_suffix = '.pica') } )
@@ -82,12 +81,16 @@ def configure(env):
 	env["bits"]="32"
 
 	env.Append(CPPPATH=['#platform/3ds'])
-	env["CC"]="arm-none-eabi-gcc"
-	env["CXX"]="arm-none-eabi-g++"
-	env["LD"]="arm-none-eabi-g++"
-	env["AR"]="arm-none-eabi-ar"
-	env["RANLIB"]="arm-none-eabi-ranlib"
-	env["AS"]="arm-none-eabi-as"
+	
+	devkitarm_path = os.environ["DEVKITARM"]
+	bin_path = os.path.join(devkitarm_path, "bin")
+	
+	env["CC"] = os.path.join(bin_path, "arm-none-eabi-gcc")
+	env["CXX"] = os.path.join(bin_path, "arm-none-eabi-g++")
+	env["LD"] = os.path.join(bin_path, "arm-none-eabi-g++")
+	env["AR"] = os.path.join(bin_path, "arm-none-eabi-ar")
+	env["RANLIB"] = os.path.join(bin_path, "arm-none-eabi-ranlib")
+	env["AS"] = os.path.join(bin_path, "arm-none-eabi-as")
 	
 	env.Append(CCFLAGS=['-march=armv6k', '-mtune=mpcore', '-mfloat-abi=hard', '-mtp=soft', '-mword-relocations'])
 	env.Append(CCFLAGS=['-fomit-frame-pointer'])
@@ -95,7 +98,16 @@ def configure(env):
 	devkitpro_path = os.environ["DEVKITPRO"]
 	ctrulib_path = os.environ["CTRULIB"]
 	
-	env.Append(CPPPATH=[devkitpro_path+"/portlibs/armv6k/include", devkitpro_path+"/portlibs/3ds/include"])
+	env.Append(CPPPATH=[
+		devkitpro_path + "/portlibs/armv6k/include",
+		devkitpro_path + "/portlibs/3ds/include",
+		devkitarm_path + "/arm-none-eabi",
+		devkitarm_path + "/include",
+		devkitarm_path + "/include/machine",
+		devkitarm_path + "/include/c++/9.1.0",
+		devkitarm_path + "/include/c++/9.1.0/arm-none-eabi",
+		devkitarm_path + "/include/c++/9.1.0/tr1",
+	])
 	env.Append(LIBPATH=[devkitpro_path+"/portlibs/armv6k/lib", devkitpro_path+"/portlibs/3ds/lib"])
 	
 	env.Append(LINKFLAGS=['-specs=3dsx.specs', '-g', '-march=armv6k', '-mtune=mpcore', '-mfloat-abi=hard'])
@@ -103,18 +115,19 @@ def configure(env):
 	env.Append(LIBPATH=[ctrulib_path+"/lib"])
 	env.Append(LIBS=["citro3d","ctru"])
 	env.Append(LIBS=["png","z"])
-	
-	#if (env["use_llvm"]=="yes"):
-		#if 'clang++' not in env['CXX']:
-			#env["CC"]="clang"
-			#env["CXX"]="clang++"
-			#env["LD"]="clang++"
-		#env.Append(CPPFLAGS=['-DTYPED_METHOD_BIND'])
-		#env.extra_suffix=".llvm"
+	env.Append(INCLUDES=["platform/3ds"])
 
-		#if (env["colored"]=="yes"):
-			#if sys.stdout.isatty():
-				#env.Append(CXXFLAGS=["-fcolor-diagnostics"])
+	#if ("use_llvm" in env and env["use_llvm"]=="yes"):
+	#	if 'CLANG++' not in env['CXX']:
+	#		env["CC"]="CLANG"
+	#		env["CXX"]="CLANG++"
+	#		env["LD"]="CLANG++"
+	#	env.append(CPPFLAGS=['-DTYPED_METHOD_BIND'])
+	#	env.extra_suffix=".llvm"
+
+	#	if ("colored" in env and env["colored"] == "yes"):
+	#		if sys.stdout.isatty():
+	#			env.append(CXXFLAGS=["-FCOLOR-DIAGNOSTICS"])
 
 	#if (env["use_sanitizer"]=="yes"):
 		#env.Append(CXXFLAGS=['-fsanitize=address','-fno-omit-frame-pointer'])
@@ -149,10 +162,10 @@ def configure(env):
 	#env.ParseConfig('pkg-config x11 --cflags --libs')
 	#env.ParseConfig('pkg-config xrandr --cflags --libs')
 
-	if (env["openssl"]=="yes"):
+	if ("openssl" in env and env["openssl"]=="yes"):
 		env.ParseConfig('pkg-config openssl --cflags --libs')
 
-	if (env["freetype"]=="yes"):
+	if ("freetype" in env and env["freetype"]=="yes"):
 		env.ParseConfig('pkg-config freetype2 --cflags --libs')
 
 
