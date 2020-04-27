@@ -55,7 +55,7 @@
 #include "main/performance.h"
 #include "main/splash.gen.h"
 #include "main/splash_editor.gen.h"
-#include "main/tests/test_main.h"
+//#include "main/tests/test_main.h"
 #include "modules/register_module_types.h"
 #include "platform/register_platform_apis.h"
 #include "scene/debugger/script_debugger_remote.h"
